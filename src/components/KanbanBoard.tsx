@@ -13,7 +13,7 @@ import {
   closestCorners,
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
-import { Board, Task, Column as ColumnType } from '@/types'
+import { Board, Task } from '@/types'
 import { Column } from './Column'
 import { TaskCard } from './TaskCard'
 import { TaskModal } from './TaskModal'
