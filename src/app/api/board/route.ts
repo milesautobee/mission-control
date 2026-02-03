@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+// Disable caching for this route
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 // GET /api/board - Get the board with all columns, projects, and tasks
 export async function GET() {
   try {
