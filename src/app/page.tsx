@@ -1,5 +1,6 @@
 import { KanbanBoard } from '@/components/KanbanBoard'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -25,6 +26,19 @@ export default function Home() {
 
             {/* Right side */}
             <div className="flex items-center gap-4">
+              {/* View Toggle */}
+              <div className="flex items-center bg-white/5 rounded-lg p-1">
+                <span className="px-3 py-1.5 text-xs bg-white/10 text-white rounded-md">
+                  Board
+                </span>
+                <Link 
+                  href="/list" 
+                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+                >
+                  List
+                </Link>
+              </div>
+              
               {/* Theme Toggle */}
               <ThemeToggle />
               

@@ -87,13 +87,19 @@ export default function ListView() {
                 <h1 className="text-lg font-bold text-white">To-Do</h1>
               </Link>
             </div>
-            <div className="flex items-center gap-2">
-              <Link 
-                href="/" 
-                className="px-3 py-1.5 text-xs text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-              >
-                Board View
-              </Link>
+            <div className="flex items-center gap-3">
+              {/* View Toggle */}
+              <div className="flex items-center bg-white/5 rounded-lg p-1">
+                <Link 
+                  href="/" 
+                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+                >
+                  Board
+                </Link>
+                <span className="px-3 py-1.5 text-xs bg-white/10 text-white rounded-md">
+                  List
+                </span>
+              </div>
               <ThemeToggle />
             </div>
           </div>
