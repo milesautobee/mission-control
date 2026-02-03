@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Board, Project } from '@/types'
+import { Board } from '@/types'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import Link from 'next/link'
 
