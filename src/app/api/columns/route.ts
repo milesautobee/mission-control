@@ -1,14 +1,19 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/columns - List all columns with tasks
+// GET /api/columns - List all columns with projects
 export async function GET() {
   try {
     const columns = await prisma.column.findMany({
       orderBy: { position: 'asc' },
       include: {
-        tasks: {
+        projects: {
           orderBy: { position: 'asc' },
+          include: {
+            tasks: {
+              orderBy: { position: 'asc' },
+            },
+          },
         },
       },
     })

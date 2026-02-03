@@ -2,17 +2,28 @@
 
 import { useDroppable } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import { Column as ColumnType, Task } from '@/types'
-import { TaskCard } from './TaskCard'
+import { Column as ColumnType, Project } from '@/types'
+import { ProjectCard } from './ProjectCard'
 
 interface ColumnProps {
   column: ColumnType
-  onAddTask: (columnId: string) => void
-  onEditTask: (task: Task) => void
-  onDeleteTask: (taskId: string) => void
+  onAddProject: (columnId: string) => void
+  onEditProject: (project: Project) => void
+  onDeleteProject: (projectId: string) => void
+  onTaskToggle: (taskId: string, completed: boolean) => void
+  onTaskAdd: (projectId: string, title: string) => void
+  onTaskDelete: (taskId: string) => void
 }
 
-export function Column({ column, onAddTask, onEditTask, onDeleteTask }: ColumnProps) {
+export function Column({ 
+  column, 
+  onAddProject, 
+  onEditProject, 
+  onDeleteProject,
+  onTaskToggle,
+  onTaskAdd,
+  onTaskDelete,
+}: ColumnProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: column.id,
   })
@@ -26,13 +37,13 @@ export function Column({ column, onAddTask, onEditTask, onDeleteTask }: ColumnPr
             className="w-3 h-3 rounded-full"
             style={{ backgroundColor: column.color || '#6b7280' }}
           />
-          <h2 className="font-semibold text-white">{column.name}</h2>
+          <h2 className="font-semibold text-white dark:text-white">{column.name}</h2>
           <span className="text-sm text-gray-500 bg-white/5 px-2 py-0.5 rounded-full">
-            {column.tasks.length}
+            {column.projects.length}
           </span>
         </div>
         <button
-          onClick={() => onAddTask(column.id)}
+          onClick={() => onAddProject(column.id)}
           className="p-1 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,7 +52,7 @@ export function Column({ column, onAddTask, onEditTask, onDeleteTask }: ColumnPr
         </button>
       </div>
 
-      {/* Tasks Container */}
+      {/* Projects Container */}
       <div
         ref={setNodeRef}
         className={`
@@ -49,14 +60,17 @@ export function Column({ column, onAddTask, onEditTask, onDeleteTask }: ColumnPr
           ${isOver ? 'bg-white/5 ring-2 ring-pink-500/50' : ''}
         `}
       >
-        <SortableContext items={column.tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext items={column.projects.map(p => p.id)} strategy={verticalListSortingStrategy}>
           <div className="flex flex-col gap-3">
-            {column.tasks.map((task) => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onEdit={onEditTask}
-                onDelete={onDeleteTask}
+            {column.projects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                onEdit={onEditProject}
+                onDelete={onDeleteProject}
+                onTaskToggle={onTaskToggle}
+                onTaskAdd={onTaskAdd}
+                onTaskDelete={onTaskDelete}
               />
             ))}
           </div>

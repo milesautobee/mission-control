@@ -18,19 +18,19 @@ model Board {
 }
 
 model Column {
-  id        String   @id @default(cuid())
-  boardId   String   @map("board_id")
-  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  id        String    @id @default(cuid())
+  boardId   String    @map("board_id")
+  board     Board     @relation(fields: [boardId], references: [id], onDelete: Cascade)
   name      String
   position  Int
   color     String?
-  tasks     Task[]
-  createdAt DateTime @default(now()) @map("created_at")
+  projects  Project[]
+  createdAt DateTime  @default(now()) @map("created_at")
 
   @@map("columns")
 }
 
-model Task {
+model Project {
   id          String    @id @default(cuid())
   columnId    String    @map("column_id")
   column      Column    @relation(fields: [columnId], references: [id], onDelete: Cascade)
@@ -41,8 +41,22 @@ model Task {
   dueDate     DateTime? @map("due_date")
   position    Int
   labels      String[]
+  tasks       Task[]
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("projects")
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  projectId   String   @map("project_id")
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  completed   Boolean  @default(false)
+  position    Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("tasks")
 }

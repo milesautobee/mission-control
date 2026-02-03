@@ -1,5 +1,15 @@
 export interface Task {
   id: string
+  projectId: string
+  title: string
+  completed: boolean
+  position: number
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface Project {
+  id: string
   columnId: string
   title: string
   description: string | null
@@ -8,6 +18,7 @@ export interface Task {
   dueDate: Date | null
   position: number
   labels: string[]
+  tasks: Task[]
   createdAt: Date
   updatedAt: Date
 }
@@ -18,7 +29,7 @@ export interface Column {
   name: string
   position: number
   color: string | null
-  tasks: Task[]
+  projects: Project[]
   createdAt: Date
 }
 

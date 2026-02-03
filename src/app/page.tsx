@@ -1,4 +1,5 @@
 import { KanbanBoard } from '@/components/KanbanBoard'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 export default function Home() {
   return (
@@ -24,6 +25,9 @@ export default function Home() {
 
             {/* Right side */}
             <div className="flex items-center gap-4">
+              {/* Theme Toggle */}
+              <ThemeToggle />
+              
               {/* Quick Stats */}
               <div className="hidden md:flex items-center gap-4 text-sm">
                 <div className="flex items-center gap-2 text-gray-400">

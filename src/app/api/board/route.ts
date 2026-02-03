@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/board - Get the board with all columns and tasks
+// GET /api/board - Get the board with all columns, projects, and tasks
 export async function GET() {
   try {
     let board = await prisma.board.findFirst({
@@ -9,8 +9,13 @@ export async function GET() {
         columns: {
           orderBy: { position: 'asc' },
           include: {
-            tasks: {
+            projects: {
               orderBy: { position: 'asc' },
+              include: {
+                tasks: {
+                  orderBy: { position: 'asc' },
+                },
+              },
             },
           },
         },
@@ -35,8 +40,13 @@ export async function GET() {
           columns: {
             orderBy: { position: 'asc' },
             include: {
-              tasks: {
+              projects: {
                 orderBy: { position: 'asc' },
+                include: {
+                  tasks: {
+                    orderBy: { position: 'asc' },
+                  },
+                },
               },
             },
           },

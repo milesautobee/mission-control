@@ -1,18 +1,18 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Task, Column, Priority, ASSIGNEES } from '@/types'
+import { Project, Column, Priority, ASSIGNEES } from '@/types'
 
-interface TaskModalProps {
+interface ProjectModalProps {
   isOpen: boolean
   onClose: () => void
-  onSave: (task: Partial<Task> & { columnId: string }) => void
-  task?: Task | null
+  onSave: (project: Partial<Project> & { columnId: string }) => void
+  project?: Project | null
   columns: Column[]
   defaultColumnId?: string
 }
 
-export function TaskModal({ isOpen, onClose, onSave, task, columns, defaultColumnId }: TaskModalProps) {
+export function ProjectModal({ isOpen, onClose, onSave, project, columns, defaultColumnId }: ProjectModalProps) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [assignee, setAssignee] = useState<string>('')
@@ -22,14 +22,14 @@ export function TaskModal({ isOpen, onClose, onSave, task, columns, defaultColum
   const [columnId, setColumnId] = useState('')
 
   useEffect(() => {
-    if (task) {
-      setTitle(task.title)
-      setDescription(task.description || '')
-      setAssignee(task.assignee || '')
-      setPriority(task.priority)
-      setDueDate(task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '')
-      setLabels(task.labels?.join(', ') || '')
-      setColumnId(task.columnId)
+    if (project) {
+      setTitle(project.title)
+      setDescription(project.description || '')
+      setAssignee(project.assignee || '')
+      setPriority(project.priority)
+      setDueDate(project.dueDate ? new Date(project.dueDate).toISOString().split('T')[0] : '')
+      setLabels(project.labels?.join(', ') || '')
+      setColumnId(project.columnId)
     } else {
       setTitle('')
       setDescription('')
@@ -39,14 +39,14 @@ export function TaskModal({ isOpen, onClose, onSave, task, columns, defaultColum
       setLabels('')
       setColumnId(defaultColumnId || columns[0]?.id || '')
     }
-  }, [task, defaultColumnId, columns])
+  }, [project, defaultColumnId, columns])
 
   if (!isOpen) return null
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     onSave({
-      ...(task ? { id: task.id } : {}),
+      ...(project ? { id: project.id } : {}),
       columnId,
       title,
       description: description || null,
@@ -64,9 +64,9 @@ export function TaskModal({ isOpen, onClose, onSave, task, columns, defaultColum
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       
       {/* Modal */}
-      <div className="relative w-full max-w-lg bg-gray-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl">
+      <div className="relative w-full max-w-lg bg-gray-900/90 dark:bg-gray-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl">
         <h2 className="text-xl font-bold text-white mb-6">
-          {task ? 'Edit Task' : 'New Task'}
+          {project ? 'Edit Project' : 'New Project'}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -79,7 +79,7 @@ export function TaskModal({ isOpen, onClose, onSave, task, columns, defaultColum
               onChange={(e) => setTitle(e.target.value)}
               required
               className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50"
-              placeholder="What needs to be done?"
+              placeholder="Project name"
             />
           </div>
 
@@ -91,7 +91,7 @@ export function TaskModal({ isOpen, onClose, onSave, task, columns, defaultColum
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 resize-none"
-              placeholder="Add more details..."
+              placeholder="What's this project about?"
             />
           </div>
 
@@ -158,7 +158,7 @@ export function TaskModal({ isOpen, onClose, onSave, task, columns, defaultColum
               value={labels}
               onChange={(e) => setLabels(e.target.value)}
               className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50"
-              placeholder="e.g., bug, feature, urgent"
+              placeholder="e.g., automation, blog, n8n"
             />
           </div>
 
@@ -175,7 +175,7 @@ export function TaskModal({ isOpen, onClose, onSave, task, columns, defaultColum
               type="submit"
               className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-medium rounded-lg hover:from-pink-600 hover:to-purple-700 transition-all"
             >
-              {task ? 'Save Changes' : 'Create Task'}
+              {project ? 'Save Changes' : 'Create Project'}
             </button>
           </div>
         </form>

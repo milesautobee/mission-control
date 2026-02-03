@@ -5,30 +5,126 @@
 :root {
   --ft-pink: #fd4987;
   --ft-purple: #6130ba;
+  --background: #0a0a0f;
+  --foreground: #ffffff;
 }
 
-body {
+/* Dark mode (default) */
+.dark {
+  --background: #0a0a0f;
+  --foreground: #ffffff;
+}
+
+.dark body {
   background: #0a0a0f;
   color: white;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
+/* Light mode */
+.light {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+}
+
+.light body {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  color: #0f172a;
+}
+
+/* Light mode overrides */
+.light .bg-gradient-to-br {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+}
+
+.light .bg-black\/20 {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.light .bg-white\/5 {
+  background: rgba(0, 0, 0, 0.03) !important;
+}
+
+.light .bg-white\/10 {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+.light .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.light .border-white\/20 {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+.light .text-white {
+  color: #0f172a !important;
+}
+
+.light .text-gray-400 {
+  color: #64748b !important;
+}
+
+.light .text-gray-500 {
+  color: #64748b !important;
+}
+
+.light .text-gray-300 {
+  color: #475569 !important;
+}
+
+.light .hover\:text-white:hover {
+  color: #0f172a !important;
+}
+
+.light .hover\:bg-white\/10:hover {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+.light .placeholder-gray-500::placeholder {
+  color: #94a3b8 !important;
+}
+
+.light input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: none;
+}
+
+/* Custom scrollbar - Dark */
+.dark ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-::-webkit-scrollbar-track {
+.dark ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
+.dark ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+.dark ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+/* Custom scrollbar - Light */
+.light ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.light ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
 }
 
 /* Glass effect utilities */
@@ -36,6 +132,11 @@ body {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.light .glass {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Gradient text */
@@ -60,6 +161,34 @@ body {
 }
 
 /* Date input styling for dark mode */
-input[type="date"]::-webkit-calendar-picker-indicator {
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
+}
+
+/* Modal background in light mode */
+.light .bg-gray-900\/90 {
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Card backgrounds in light mode */
+.light .bg-purple-500\/20 {
+  background: rgba(97, 48, 186, 0.15) !important;
+}
+
+.light .text-purple-300 {
+  color: #7c3aed !important;
+}
+
+.light .border-purple-500\/30 {
+  border-color: rgba(97, 48, 186, 0.3) !important;
+}
+
+/* Progress bar container in light mode */
+.light .bg-white\/10 {
+  background: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ring color in light mode */
+.light .ring-pink-500\/50 {
+  --tw-ring-color: rgba(253, 73, 135, 0.3) !important;
 }

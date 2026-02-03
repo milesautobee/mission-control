@@ -9,7 +9,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Mission Control | Fast Track",
-  description: "Kanban task management for Fast Track operations",
+  description: "Project management dashboard for Fast Track operations",
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body className={`${inter.variable} font-sans antialiased`}>
         {children}
       </body>

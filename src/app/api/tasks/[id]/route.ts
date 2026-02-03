@@ -10,11 +10,6 @@ export async function GET(
     const { id } = await params
     const task = await prisma.task.findUnique({
       where: { id },
-      include: {
-        column: {
-          select: { name: true },
-        },
-      },
     })
 
     if (!task) {
@@ -28,7 +23,7 @@ export async function GET(
   }
 }
 
-// PATCH /api/tasks/[id] - Update a task
+// PATCH /api/tasks/[id] - Update a task (toggle completed, update title, reorder)
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -36,18 +31,13 @@ export async function PATCH(
   try {
     const { id } = await params
     const body = await request.json()
-    const { columnId, title, description, assignee, priority, dueDate, position, labels } = body
+    const { title, completed, position } = body
 
     // Build update data object
     const updateData: Record<string, unknown> = {}
     if (title !== undefined) updateData.title = title
-    if (description !== undefined) updateData.description = description
-    if (assignee !== undefined) updateData.assignee = assignee
-    if (priority !== undefined) updateData.priority = priority
-    if (dueDate !== undefined) updateData.dueDate = dueDate ? new Date(dueDate) : null
-    if (labels !== undefined) updateData.labels = labels
+    if (completed !== undefined) updateData.completed = completed
     if (position !== undefined) updateData.position = position
-    if (columnId !== undefined) updateData.columnId = columnId
 
     const task = await prisma.task.update({
       where: { id },

@@ -13,17 +13,17 @@ import {
   closestCorners,
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
-import { Board, Task } from '@/types'
+import { Board, Project } from '@/types'
 import { Column } from './Column'
-import { TaskCard } from './TaskCard'
-import { TaskModal } from './TaskModal'
+import { ProjectCard } from './ProjectCard'
+import { ProjectModal } from './ProjectModal'
 
 export function KanbanBoard() {
   const [board, setBoard] = useState<Board | null>(null)
   const [loading, setLoading] = useState(true)
-  const [activeTask, setActiveTask] = useState<Task | null>(null)
+  const [activeProject, setActiveProject] = useState<Project | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
-  const [editingTask, setEditingTask] = useState<Task | null>(null)
+  const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [defaultColumnId, setDefaultColumnId] = useState<string>('')
 
   const sensors = useSensors(
@@ -52,10 +52,10 @@ export function KanbanBoard() {
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event
-    const task = board?.columns
-      .flatMap(col => col.tasks)
-      .find(t => t.id === active.id)
-    setActiveTask(task || null)
+    const project = board?.columns
+      .flatMap(col => col.projects)
+      .find(p => p.id === active.id)
+    setActiveProject(project || null)
   }
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -67,34 +67,34 @@ export function KanbanBoard() {
 
     // Find source column
     const sourceColumn = board.columns.find(col =>
-      col.tasks.some(t => t.id === activeId)
+      col.projects.some(p => p.id === activeId)
     )
     if (!sourceColumn) return
 
-    // Find destination - could be a column or another task
+    // Find destination - could be a column or another project
     let destColumn = board.columns.find(col => col.id === overId)
     if (!destColumn) {
       destColumn = board.columns.find(col =>
-        col.tasks.some(t => t.id === overId)
+        col.projects.some(p => p.id === overId)
       )
     }
     if (!destColumn || sourceColumn.id === destColumn.id) return
 
-    // Move task to new column
+    // Move project to new column
     setBoard(prev => {
       if (!prev) return prev
       const newColumns = prev.columns.map(col => {
         if (col.id === sourceColumn.id) {
           return {
             ...col,
-            tasks: col.tasks.filter(t => t.id !== activeId),
+            projects: col.projects.filter(p => p.id !== activeId),
           }
         }
         if (col.id === destColumn!.id) {
-          const task = sourceColumn.tasks.find(t => t.id === activeId)!
+          const project = sourceColumn.projects.find(p => p.id === activeId)!
           return {
             ...col,
-            tasks: [...col.tasks, { ...task, columnId: col.id }],
+            projects: [...col.projects, { ...project, columnId: col.id }],
           }
         }
         return col
@@ -105,42 +105,42 @@ export function KanbanBoard() {
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event
-    setActiveTask(null)
+    setActiveProject(null)
 
     if (!over || !board) return
 
     const activeId = active.id as string
     const overId = over.id as string
 
-    // Find the column containing the active task
+    // Find the column containing the active project
     const column = board.columns.find(col =>
-      col.tasks.some(t => t.id === activeId)
+      col.projects.some(p => p.id === activeId)
     )
     if (!column) return
 
-    // Check if dropping on another task in the same column
-    const activeIndex = column.tasks.findIndex(t => t.id === activeId)
-    const overIndex = column.tasks.findIndex(t => t.id === overId)
+    // Check if dropping on another project in the same column
+    const activeIndex = column.projects.findIndex(p => p.id === activeId)
+    const overIndex = column.projects.findIndex(p => p.id === overId)
 
     if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
       // Reorder within column
-      const newTasks = arrayMove(column.tasks, activeIndex, overIndex)
+      const newProjects = arrayMove(column.projects, activeIndex, overIndex)
       setBoard(prev => {
         if (!prev) return prev
         return {
           ...prev,
           columns: prev.columns.map(col =>
-            col.id === column.id ? { ...col, tasks: newTasks } : col
+            col.id === column.id ? { ...col, projects: newProjects } : col
           ),
         }
       })
     }
 
     // Update position in database
-    const task = column.tasks.find(t => t.id === activeId)
-    if (task) {
-      const newPosition = column.tasks.findIndex(t => t.id === activeId)
-      await fetch(`/api/tasks/${activeId}`, {
+    const project = column.projects.find(p => p.id === activeId)
+    if (project) {
+      const newPosition = column.projects.findIndex(p => p.id === activeId)
+      await fetch(`/api/projects/${activeId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -151,77 +151,131 @@ export function KanbanBoard() {
     }
   }
 
-  const handleAddTask = (columnId: string) => {
-    setEditingTask(null)
+  const handleAddProject = (columnId: string) => {
+    setEditingProject(null)
     setDefaultColumnId(columnId)
     setModalOpen(true)
   }
 
-  const handleEditTask = (task: Task) => {
-    setEditingTask(task)
-    setDefaultColumnId(task.columnId)
+  const handleEditProject = (project: Project) => {
+    setEditingProject(project)
+    setDefaultColumnId(project.columnId)
     setModalOpen(true)
   }
 
-  const handleDeleteTask = async (taskId: string) => {
-    if (!confirm('Delete this task?')) return
-    await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
+  const handleDeleteProject = async (projectId: string) => {
+    if (!confirm('Delete this project and all its tasks?')) return
+    await fetch(`/api/projects/${projectId}`, { method: 'DELETE' })
     setBoard(prev => {
       if (!prev) return prev
       return {
         ...prev,
         columns: prev.columns.map(col => ({
           ...col,
-          tasks: col.tasks.filter(t => t.id !== taskId),
+          projects: col.projects.filter(p => p.id !== projectId),
         })),
       }
     })
   }
 
-  const handleSaveTask = async (taskData: Partial<Task> & { columnId: string }) => {
-    if (editingTask) {
-      // Update existing task
-      const res = await fetch(`/api/tasks/${editingTask.id}`, {
+  const handleSaveProject = async (projectData: Partial<Project> & { columnId: string }) => {
+    if (editingProject) {
+      // Update existing project
+      const res = await fetch(`/api/projects/${editingProject.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(taskData),
+        body: JSON.stringify(projectData),
       })
-      const updated = await res.json()
-      setBoard(prev => {
-        if (!prev) return prev
-        return {
-          ...prev,
-          columns: prev.columns.map(col => ({
-            ...col,
-            tasks: col.id === taskData.columnId
-              ? col.tasks.map(t => t.id === updated.id ? { ...t, ...updated } : t)
-                  .concat(col.id !== editingTask.columnId ? [] : [])
-              : col.tasks.filter(t => t.id !== updated.id),
-          })),
-        }
-      })
+      await res.json()
       // Refetch to ensure consistency
       fetchBoard()
     } else {
-      // Create new task
-      const res = await fetch('/api/tasks', {
+      // Create new project
+      const res = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(taskData),
+        body: JSON.stringify(projectData),
       })
-      const newTask = await res.json()
+      const newProject = await res.json()
       setBoard(prev => {
         if (!prev) return prev
         return {
           ...prev,
           columns: prev.columns.map(col =>
-            col.id === taskData.columnId
-              ? { ...col, tasks: [...col.tasks, newTask] }
+            col.id === projectData.columnId
+              ? { ...col, projects: [...col.projects, { ...newProject, tasks: [] }] }
               : col
           ),
         }
       })
     }
+  }
+
+  // Task handlers
+  const handleTaskToggle = async (taskId: string, completed: boolean) => {
+    await fetch(`/api/tasks/${taskId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ completed }),
+    })
+    // Update local state
+    setBoard(prev => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        columns: prev.columns.map(col => ({
+          ...col,
+          projects: col.projects.map(p => ({
+            ...p,
+            tasks: p.tasks?.map(t => 
+              t.id === taskId ? { ...t, completed } : t
+            ) || [],
+          })),
+        })),
+      }
+    })
+  }
+
+  const handleTaskAdd = async (projectId: string, title: string) => {
+    const res = await fetch('/api/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ projectId, title }),
+    })
+    const newTask = await res.json()
+    // Update local state
+    setBoard(prev => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        columns: prev.columns.map(col => ({
+          ...col,
+          projects: col.projects.map(p => 
+            p.id === projectId
+              ? { ...p, tasks: [...(p.tasks || []), newTask] }
+              : p
+          ),
+        })),
+      }
+    })
+  }
+
+  const handleTaskDelete = async (taskId: string) => {
+    await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
+    // Update local state
+    setBoard(prev => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        columns: prev.columns.map(col => ({
+          ...col,
+          projects: col.projects.map(p => ({
+            ...p,
+            tasks: p.tasks?.filter(t => t.id !== taskId) || [],
+          })),
+        })),
+      }
+    })
   }
 
   if (loading) {
@@ -254,29 +308,35 @@ export function KanbanBoard() {
             <Column
               key={column.id}
               column={column}
-              onAddTask={handleAddTask}
-              onEditTask={handleEditTask}
-              onDeleteTask={handleDeleteTask}
+              onAddProject={handleAddProject}
+              onEditProject={handleEditProject}
+              onDeleteProject={handleDeleteProject}
+              onTaskToggle={handleTaskToggle}
+              onTaskAdd={handleTaskAdd}
+              onTaskDelete={handleTaskDelete}
             />
           ))}
         </div>
 
         <DragOverlay>
-          {activeTask && (
-            <TaskCard
-              task={activeTask}
+          {activeProject && (
+            <ProjectCard
+              project={activeProject}
               onEdit={() => {}}
               onDelete={() => {}}
+              onTaskToggle={() => {}}
+              onTaskAdd={() => {}}
+              onTaskDelete={() => {}}
             />
           )}
         </DragOverlay>
       </DndContext>
 
-      <TaskModal
+      <ProjectModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSave={handleSaveTask}
-        task={editingTask}
+        onSave={handleSaveProject}
+        project={editingProject}
         columns={board.columns}
         defaultColumnId={defaultColumnId}
       />
