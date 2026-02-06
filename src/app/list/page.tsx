@@ -20,6 +20,7 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import { Board } from '@/types'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { SearchBar } from '@/components/SearchBar'
 import Link from 'next/link'
 
 const PRIORITY_DOTS: Record<string, string> = {
@@ -260,12 +261,25 @@ export default function ListView() {
                   List
                 </span>
                 <Link 
+                  href="/calendar" 
+                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+                >
+                  Calendar
+                </Link>
+                <Link 
                   href="/activity" 
                   className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
                 >
                   Activity
                 </Link>
+                <Link 
+                  href="/search" 
+                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+                >
+                  Search
+                </Link>
               </div>
+              <SearchBar />
               <ThemeToggle />
             </div>
           </div>

@@ -1,9 +1,8 @@
 import Link from 'next/link'
-import { ActivityFeed } from '@/components/ActivityFeed'
-import { SearchBar } from '@/components/SearchBar'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { WeeklyCalendar } from '@/components/WeeklyCalendar'
 
-export default function ActivityPage() {
+export default function CalendarPage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
       <header className="border-b border-white/10 bg-black/20 backdrop-blur-xl sticky top-0 z-40">
@@ -35,30 +34,23 @@ export default function ActivityPage() {
                 >
                   List
                 </Link>
-                <Link
-                  href="/calendar"
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Calendar
-                </Link>
-                <Link
-                  href="/search"
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Search
-                </Link>
                 <span className="px-3 py-1.5 text-xs bg-white/10 text-white rounded-md">
-                  Activity
+                  Calendar
                 </span>
+                <Link
+                  href="/activity"
+                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+                >
+                  Activity
+                </Link>
               </div>
 
-              <SearchBar />
               <ThemeToggle />
 
               <div className="hidden md:flex items-center gap-4 text-sm">
                 <div className="flex items-center gap-2 text-gray-400">
-                  <span className="w-2 h-2 rounded-full bg-pink-500"></span>
-                  <span>Logging</span>
+                  <span className="w-2 h-2 rounded-full bg-purple-500"></span>
+                  <span>Schedule</span>
                 </div>
               </div>
             </div>
@@ -66,7 +58,7 @@ export default function ActivityPage() {
         </div>
       </header>
 
-      <ActivityFeed />
+      <WeeklyCalendar />
     </main>
   )
 }

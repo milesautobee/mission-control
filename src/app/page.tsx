@@ -1,4 +1,5 @@
 import { KanbanBoard } from '@/components/KanbanBoard'
+import { SearchBar } from '@/components/SearchBar'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import Link from 'next/link'
 
@@ -38,12 +39,26 @@ export default function Home() {
                   List
                 </Link>
                 <Link 
+                  href="/calendar" 
+                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+                >
+                  Calendar
+                </Link>
+                <Link 
                   href="/activity" 
                   className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
                 >
                   Activity
                 </Link>
+                <Link 
+                  href="/search" 
+                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+                >
+                  Search
+                </Link>
               </div>
+
+              <SearchBar />
               
               {/* Theme Toggle */}
               <ThemeToggle />
