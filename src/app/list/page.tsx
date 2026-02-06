@@ -259,6 +259,12 @@ export default function ListView() {
                 <span className="px-3 py-1.5 text-xs bg-white/10 text-white rounded-md">
                   List
                 </span>
+                <Link 
+                  href="/activity" 
+                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+                >
+                  Activity
+                </Link>
               </div>
               <ThemeToggle />
             </div>
