@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { logActivity } from '@/lib/activity'
 
 // GET /api/tasks - List tasks (subtasks) for a project
 export async function GET(request: NextRequest) {
@@ -48,6 +49,14 @@ export async function POST(request: NextRequest) {
         title,
         position: (maxPosition._max.position ?? -1) + 1,
       },
+    })
+
+    // Log activity
+    await logActivity({
+      action: 'create',
+      category: 'task',
+      title: `Created task "${title}"`,
+      metadata: { taskId: task.id, projectId },
     })
 
     return NextResponse.json(task, { status: 201 })

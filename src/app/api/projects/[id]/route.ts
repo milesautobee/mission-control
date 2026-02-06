@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { logActivity } from '@/lib/activity'
 
 // GET /api/projects/[id] - Get a single project
 export async function GET(
@@ -41,6 +42,12 @@ export async function PATCH(
     const body = await request.json()
     const { columnId, title, description, assignee, priority, dueDate, position, labels } = body
 
+    // Get current project state for change detection
+    const oldProject = await prisma.project.findUnique({
+      where: { id },
+      include: { column: { select: { name: true } } },
+    })
+
     // Build update data object
     const updateData: Record<string, unknown> = {}
     if (title !== undefined) updateData.title = title
@@ -56,11 +63,32 @@ export async function PATCH(
       where: { id },
       data: updateData,
       include: {
+        column: { select: { name: true } },
         tasks: {
           orderBy: { position: 'asc' },
         },
       },
     })
+
+    // Log activity based on what changed
+    if (columnId !== undefined && oldProject && oldProject.columnId !== columnId) {
+      // Project moved between columns
+      await logActivity({
+        action: 'move',
+        category: 'project',
+        title: `Moved "${project.title}" to ${project.column.name}`,
+        description: `From ${oldProject.column.name} to ${project.column.name}`,
+        metadata: { projectId: id, fromColumn: oldProject.columnId, toColumn: columnId },
+      })
+    } else if (Object.keys(updateData).length > 0) {
+      // General update
+      await logActivity({
+        action: 'update',
+        category: 'project',
+        title: `Updated "${project.title}"`,
+        metadata: { projectId: id, fields: Object.keys(updateData) },
+      })
+    }
 
     return NextResponse.json(project)
   } catch (error) {
@@ -76,8 +104,20 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
+    
+    // Get project title before deleting
+    const project = await prisma.project.findUnique({ where: { id } })
+    
     await prisma.project.delete({
       where: { id },
+    })
+
+    // Log activity
+    await logActivity({
+      action: 'delete',
+      category: 'project',
+      title: `Deleted project "${project?.title ?? id}"`,
+      metadata: { projectId: id },
     })
 
     return NextResponse.json({ success: true })

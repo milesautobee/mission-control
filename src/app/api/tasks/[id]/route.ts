@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { logActivity } from '@/lib/activity'
 
 // GET /api/tasks/[id] - Get a single task
 export async function GET(
@@ -44,6 +45,23 @@ export async function PATCH(
       data: updateData,
     })
 
+    // Log activity based on what changed
+    if (completed !== undefined) {
+      await logActivity({
+        action: completed ? 'complete' : 'uncomplete',
+        category: 'task',
+        title: completed ? `Completed task "${task.title}"` : `Reopened task "${task.title}"`,
+        metadata: { taskId: id, completed },
+      })
+    } else if (title !== undefined) {
+      await logActivity({
+        action: 'update',
+        category: 'task',
+        title: `Updated task "${task.title}"`,
+        metadata: { taskId: id },
+      })
+    }
+
     return NextResponse.json(task)
   } catch (error) {
     console.error('Failed to update task:', error)
@@ -58,8 +76,20 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
+    
+    // Get task title before deleting
+    const task = await prisma.task.findUnique({ where: { id } })
+    
     await prisma.task.delete({
       where: { id },
+    })
+
+    // Log activity
+    await logActivity({
+      action: 'delete',
+      category: 'task',
+      title: `Deleted task "${task?.title ?? id}"`,
+      metadata: { taskId: id },
     })
 
     return NextResponse.json({ success: true })
