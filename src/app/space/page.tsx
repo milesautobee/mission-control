@@ -5,6 +5,7 @@ import { Board } from '@/types'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { ViewToggle } from '@/components/ViewToggle'
 import { SearchBar } from '@/components/SearchBar'
+import { AgentStatus } from '@/components/AgentStatus'
 import Link from 'next/link'
 
 interface ProjectWithMeta {
@@ -215,6 +216,9 @@ export default function SpaceView() {
               SYS EFF <span className={`ml-3 ${totalTasks > 0 ? (completedTasks/totalTasks > 0.5 ? 'text-green-400' : 'text-yellow-400') : 'text-gray-600'}`}>
                 {totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%
               </span>
+            </div>
+            <div className="pt-1 border-t border-white/10 mt-1">
+              <AgentStatus variant="hud" />
             </div>
           </div>
         </div>
