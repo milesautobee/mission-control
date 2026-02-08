@@ -70,26 +70,15 @@ function Island({ project, x, y, size, onClick, isSelected, hasBoat }: {
   const vegLight = progress > 0.7 ? '#2d9d5a' : progress > 0.3 ? '#4ab87a' : '#7cc99a'
   const vegDark = progress > 0.7 ? '#1a7a3f' : progress > 0.3 ? '#2e8a55' : '#4aaa70'
 
-  // Status glow
-  const glowColor = isActive ? '#fd4987' : isDone ? '#22c55e' : 'transparent'
-
   return (
     <g
       style={{ cursor: 'pointer', opacity: isBacklog ? 0.45 : 1, transition: 'opacity 0.3s' }}
       onClick={() => onClick(project)}
     >
-      {/* Glow ring for active / selected */}
-      {(isActive || isSelected) && (
+      {/* Selection ring only */}
+      {isSelected && (
         <ellipse cx={x} cy={y} rx={s * 0.55} ry={s * 0.42} fill="none"
-          stroke={isSelected ? '#fd4987' : glowColor}
-          strokeWidth={isSelected ? 2.5 : 2}
-          strokeDasharray={isSelected ? '6 4' : 'none'}
-          opacity={0.6}
-        >
-          {isActive && !isSelected && (
-            <animate attributeName="opacity" values="0.6;0.25;0.6" dur="3s" repeatCount="indefinite" />
-          )}
-        </ellipse>
+          stroke="#fd4987" strokeWidth={2.5} strokeDasharray="6 4" opacity={0.7} />
       )}
 
       {/* Water shadow beneath island */}
@@ -237,36 +226,41 @@ function Island({ project, x, y, size, onClick, isSelected, hasBoat }: {
         </g>
       )}
 
-      {/* ─── BOAT parked at island ─── */}
+      {/* ─── BOAT parked at island (2x size) ─── */}
       {hasBoat && (
         <g>
-          {/* Pulse ring around boat */}
-          <ellipse cx={x-s*0.38} cy={y+s*0.15} rx="14" ry="5" fill="none"
-            stroke="rgba(253,73,135,0.3)" strokeWidth="1.5">
-            <animate attributeName="rx" values="10;18;10" dur="3s" repeatCount="indefinite" />
-            <animate attributeName="ry" values="4;7;4" dur="3s" repeatCount="indefinite" />
-            <animate attributeName="opacity" values="0.4;0.1;0.4" dur="3s" repeatCount="indefinite" />
+          {/* Subtle pulse glow under boat */}
+          <ellipse cx={x-s*0.42} cy={y+s*0.18} rx="22" ry="8" fill="none"
+            stroke="rgba(253,73,135,0.25)" strokeWidth="1.5">
+            <animate attributeName="rx" values="18;26;18" dur="3.5s" repeatCount="indefinite" />
+            <animate attributeName="ry" values="6;10;6" dur="3.5s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.3;0.08;0.3" dur="3.5s" repeatCount="indefinite" />
           </ellipse>
-          {/* Boat hull */}
-          <path d={`M${x-s*0.48},${y+s*0.15} Q${x-s*0.5},${y+s*0.2} ${x-s*0.38},${y+s*0.21} Q${x-s*0.26},${y+s*0.2} ${x-s*0.28},${y+s*0.15} Z`}
+          {/* Boat hull — bigger */}
+          <path d={`M${x-s*0.56},${y+s*0.16} Q${x-s*0.58},${y+s*0.24} ${x-s*0.42},${y+s*0.26} Q${x-s*0.26},${y+s*0.24} ${x-s*0.28},${y+s*0.16} Z`}
             fill="#8B4513" />
-          <path d={`M${x-s*0.46},${y+s*0.15} L${x-s*0.3},${y+s*0.15} L${x-s*0.32},${y+s*0.12} L${x-s*0.44},${y+s*0.12} Z`}
+          <path d={`M${x-s*0.54},${y+s*0.16} L${x-s*0.3},${y+s*0.16} L${x-s*0.32},${y+s*0.11} L${x-s*0.52},${y+s*0.11} Z`}
             fill="#A0522D" />
-          {/* Mast & sail */}
-          <line x1={x-s*0.38} y1={y+s*0.12} x2={x-s*0.38} y2={y-s*0.02} stroke="#5a3a1a" strokeWidth="1.5" />
-          <path d={`M${x-s*0.38},${y-s*0.02} Q${x-s*0.3},${y+s*0.04} ${x-s*0.36},${y+s*0.1} L${x-s*0.38},${y+s*0.1} Z`}
-            fill="white" opacity="0.85" />
+          {/* Deck detail */}
+          <line x1={x-s*0.5} y1={y+s*0.14} x2={x-s*0.34} y2={y+s*0.14} stroke="#6B4226" strokeWidth="0.8" opacity="0.4" />
+          {/* Mast & sail — taller */}
+          <line x1={x-s*0.42} y1={y+s*0.11} x2={x-s*0.42} y2={y-s*0.08} stroke="#5a3a1a" strokeWidth="2" />
+          <path d={`M${x-s*0.42},${y-s*0.08} Q${x-s*0.32},${y} ${x-s*0.38},${y+s*0.08} L${x-s*0.42},${y+s*0.08} Z`}
+            fill="white" opacity="0.9" />
+          {/* Small flag at top of mast */}
+          <polygon points={`${x-s*0.42},${y-s*0.08} ${x-s*0.37},${y-s*0.06} ${x-s*0.42},${y-s*0.04}`}
+            fill="#fd4987" />
           {/* Miles on the boat */}
-          <text x={x-s*0.39} y={y+s*0.11} fontSize="9" textAnchor="middle">🤖</text>
-          {/* Water ripples around boat */}
-          <ellipse cx={x-s*0.38} cy={y+s*0.22} rx="12" ry="3"
-            fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="0.8">
-            <animate attributeName="rx" values="10;15;10" dur="4s" repeatCount="indefinite" />
-            <animate attributeName="opacity" values="0.12;0.04;0.12" dur="4s" repeatCount="indefinite" />
+          <text x={x-s*0.43} y={y+s*0.1} fontSize="14" textAnchor="middle">🤖</text>
+          {/* Water ripples */}
+          <ellipse cx={x-s*0.42} cy={y+s*0.28} rx="18" ry="4"
+            fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="0.8">
+            <animate attributeName="rx" values="14;22;14" dur="4s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.1;0.03;0.1" dur="4s" repeatCount="indefinite" />
           </ellipse>
-          {/* Gentle bob animation */}
+          {/* Gentle bob */}
           <animateTransform attributeName="transform" type="translate"
-            values="0,0; 0,-1.5; 0,0; 0,1; 0,0" dur="5s" repeatCount="indefinite" />
+            values="0,0; 0,-2; 0,0; 0,1.5; 0,0" dur="5s" repeatCount="indefinite" />
         </g>
       )}
 
@@ -341,11 +335,6 @@ function Island({ project, x, y, size, onClick, isSelected, hasBoat }: {
         </g>
       )}
 
-      {/* Selection ring */}
-      {isSelected && (
-        <ellipse cx={x} cy={y} rx={s * 0.5} ry={s * 0.38} fill="none"
-          stroke="#fd4987" strokeWidth="2" strokeDasharray="5 3" />
-      )}
     </g>
   )
 }
