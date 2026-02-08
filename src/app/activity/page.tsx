@@ -1,6 +1,7 @@
-import Link from 'next/link'
 import { ActivityFeed } from '@/components/ActivityFeed'
 import { SearchBar } from '@/components/SearchBar'
+import { ViewToggle } from '@/components/ViewToggle'
+//  from '@/components/SearchBar'
 import { ThemeToggle } from '@/components/ThemeToggle'
 
 export default function ActivityPage() {
@@ -22,35 +23,7 @@ export default function ActivityPage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex items-center bg-white/5 rounded-lg p-1">
-                <Link
-                  href="/"
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Board
-                </Link>
-                <Link
-                  href="/list"
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  List
-                </Link>
-                <Link
-                  href="/calendar"
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Calendar
-                </Link>
-                <Link
-                  href="/search"
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Search
-                </Link>
-                <span className="px-3 py-1.5 text-xs bg-white/10 text-white rounded-md">
-                  Activity
-                </span>
-              </div>
+              <ViewToggle active="activity" />
 
               <SearchBar />
               <ThemeToggle />

@@ -21,6 +21,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { Board } from '@/types'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { SearchBar } from '@/components/SearchBar'
+import { ViewToggle } from '@/components/ViewToggle'
 import Link from 'next/link'
 
 const PRIORITY_DOTS: Record<string, string> = {
@@ -249,36 +250,7 @@ export default function ListView() {
               </Link>
             </div>
             <div className="flex items-center gap-3">
-              {/* View Toggle */}
-              <div className="flex items-center bg-white/5 rounded-lg p-1">
-                <Link 
-                  href="/" 
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Board
-                </Link>
-                <span className="px-3 py-1.5 text-xs bg-white/10 text-white rounded-md">
-                  List
-                </span>
-                <Link 
-                  href="/calendar" 
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Calendar
-                </Link>
-                <Link 
-                  href="/activity" 
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Activity
-                </Link>
-                <Link 
-                  href="/search" 
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Search
-                </Link>
-              </div>
+              <ViewToggle active="list" />
               <SearchBar />
               <ThemeToggle />
             </div>

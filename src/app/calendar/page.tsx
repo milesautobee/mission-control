@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { ViewToggle } from "@/components/ViewToggle"
 import { WeeklyCalendar } from '@/components/WeeklyCalendar'
 
 export default function CalendarPage() {
@@ -21,29 +21,7 @@ export default function CalendarPage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex items-center bg-white/5 rounded-lg p-1">
-                <Link
-                  href="/"
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Board
-                </Link>
-                <Link
-                  href="/list"
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  List
-                </Link>
-                <span className="px-3 py-1.5 text-xs bg-white/10 text-white rounded-md">
-                  Calendar
-                </span>
-                <Link
-                  href="/activity"
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Activity
-                </Link>
-              </div>
+              <ViewToggle active="calendar" />
 
               <ThemeToggle />
 

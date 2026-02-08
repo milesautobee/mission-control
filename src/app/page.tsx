@@ -1,7 +1,7 @@
 import { KanbanBoard } from '@/components/KanbanBoard'
 import { SearchBar } from '@/components/SearchBar'
 import { ThemeToggle } from '@/components/ThemeToggle'
-import Link from 'next/link'
+import { ViewToggle } from '@/components/ViewToggle'
 
 export default function Home() {
   return (
@@ -27,40 +27,8 @@ export default function Home() {
 
             {/* Right side */}
             <div className="flex items-center gap-4">
-              {/* View Toggle */}
-              <div className="flex items-center bg-white/5 rounded-lg p-1">
-                <span className="px-3 py-1.5 text-xs bg-white/10 text-white rounded-md">
-                  Board
-                </span>
-                <Link 
-                  href="/list" 
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  List
-                </Link>
-                <Link 
-                  href="/calendar" 
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Calendar
-                </Link>
-                <Link 
-                  href="/activity" 
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Activity
-                </Link>
-                <Link 
-                  href="/search" 
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-                >
-                  Search
-                </Link>
-              </div>
-
+              <ViewToggle active="board" />
               <SearchBar />
-              
-              {/* Theme Toggle */}
               <ThemeToggle />
               
               {/* Quick Stats */}
