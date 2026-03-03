@@ -135,9 +135,9 @@ export default function Home() {
         </div>
 
         {sidebarOpen && (
-          <aside className="w-72 border-l border-white/10 bg-black/30 backdrop-blur-xl p-4 shrink-0">
+          <aside className="w-72 border-l border-black/10 dark:border-white/10 bg-black/5 dark:bg-black/30 backdrop-blur-xl p-4 shrink-0">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-white uppercase tracking-wide">
+              <h2 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide">
                 Live Activity
               </h2>
               <span className="text-xs text-gray-500">{activities.length}</span>
@@ -147,14 +147,14 @@ export default function Home() {
               {activities.map(activity => (
                 <article
                   key={activity.id}
-                  className="rounded-lg border border-white/10 bg-white/5 px-3 py-2"
+                  className="rounded-lg border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 px-3 py-2"
                 >
                   <div className="flex items-start gap-2">
                     <span
                       className={`mt-1 h-2 w-2 rounded-full ${getActivityDotColor(activity)}`}
                     />
                     <div className="min-w-0">
-                      <p className="text-sm text-gray-100 leading-snug">{activity.title}</p>
+                      <p className="text-sm text-gray-900 dark:text-gray-100 leading-snug">{activity.title}</p>
                       <p className="text-xs text-gray-500 mt-1">
                         {toRelativeTime(activity.timestamp)}
                       </p>
