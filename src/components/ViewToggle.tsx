@@ -8,6 +8,7 @@ const VIEWS = [
   { id: 'map', label: '🏝️ Islands', href: '/map' },
   { id: 'space', label: '🚀 Station', href: '/space' },
   { id: 'calendar', label: 'Calendar', href: '/calendar' },
+  { id: 'docs', label: 'Docs', href: '/docs' },
   { id: 'memory', label: 'Memory', href: '/memory' },
   { id: 'activity', label: 'Activity', href: '/activity' },
   { id: 'search', label: 'Search', href: '/search' },
